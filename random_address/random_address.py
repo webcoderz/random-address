@@ -9,9 +9,8 @@ import sys
 
 def _get_address_dict_list():
     package_directory = os.path.dirname(sys.modules[__name__].__file__)
-    source_filename_path = os.path.join(package_directory,
-                                        'addresses-us-all.min.json')
-    with open(source_filename_path, 'r') as source_filename:
+    source_filename_path = os.path.join(package_directory, 'addresses-us-all.min.json')
+    with open(source_filename_path, 'r', encoding='utf-8') as source_filename:
         data = json.load(source_filename)
     return data
 
@@ -27,9 +26,8 @@ def real_random_address() -> dict:
     A dictionary with address information
     """
     package_directory = os.path.dirname(sys.modules[__name__].__file__)
-    source_filename_path = os.path.join(package_directory,
-                                        'addresses-us-all.min.json')
-    with open(source_filename_path, 'r') as source_filename:
+    source_filename_path = os.path.join(package_directory, 'addresses-us-all.min.json')
+    with open(source_filename_path, 'r', encoding='utf-8') as source_filename:
         data = json.load(source_filename)
     return random.choice(data.get('addresses'))
 
@@ -48,14 +46,8 @@ def real_random_address_by_state(state_code: str) -> dict:
     if no address is found returns an empty dict.
     """
     data = _get_address_dict_list()
-    filtered_data = []
-    for element in data.get('addresses'):
-        if element.get('state') == state_code:
-            filtered_data.append(element)
-
-    if len(filtered_data) > 0:
-        return random.choice(filtered_data)
-    return {}
+    filtered_data = [element for element in data.get('addresses') if element.get('state') == state_code]
+    return random.choice(filtered_data) if filtered_data else {}
 
 
 def real_random_address_by_postal_code(postal_code: str) -> dict:
@@ -72,11 +64,5 @@ def real_random_address_by_postal_code(postal_code: str) -> dict:
     if no address is found returns an empty dict.
     """
     data = _get_address_dict_list()
-    filtered_data = []
-    for element in data.get('addresses'):
-        if element.get('postalCode') == postal_code:
-            filtered_data.append(element)
-
-    if len(filtered_data) > 0:
-        return random.choice(filtered_data)
-    return {}
+    filtered_data = [element for element in data.get('addresses') if element.get('postalCode') == postal_code]
+    return random.choice(filtered_data) if filtered_data else {}
